@@ -12,6 +12,7 @@
 
     <modules>
         <module>clickhouse-db-common</module>
+        <module>clickhouse-client-gui</module>
     </modules>
 
     <properties>

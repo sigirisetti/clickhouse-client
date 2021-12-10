@@ -1,4 +1,4 @@
-package com.ssk.db.clickhouse;
+package com.ssk.clickhouse.conn;
 
 import java.time.Clock;
 import java.time.Instant;
