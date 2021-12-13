@@ -2,10 +2,7 @@ package com.ssk.clickhouse.client.gui;
 
 import javax.swing.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import static com.ssk.clickhouse.client.gui.AppSwingUtils.createImageIcon;
+import static com.ssk.clickhouse.client.utils.AppSwingUtils.createImageIcon;
 
 public class AppToolBar extends JToolBar {
 

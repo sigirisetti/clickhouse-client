@@ -50,7 +50,7 @@ public class DbMetaDataDao {
              PreparedStatement ps = connection.prepareStatement(sql);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    tables.add(new Table(rs.getString("name")));
+                    tables.add(new Table(db.getName(), rs.getString("name")));
                 }
             }
             db.setTables(tables);

@@ -1,5 +1,6 @@
-package com.ssk.clickhouse.client.model;
+package com.ssk.clickhouse.client.config;
 
+import com.ssk.clickhouse.client.model.AllConnections;
 import com.ssk.clickhouse.db.model.ClientConnectionConfig;
 
 import javax.swing.*;

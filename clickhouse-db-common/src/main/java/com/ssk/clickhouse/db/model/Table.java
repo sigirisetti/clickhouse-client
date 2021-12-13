@@ -5,11 +5,21 @@ import java.util.Objects;
 
 public class Table {
 
+    private String database;
     private String name;
     private List<Column> column;
 
-    public Table(String name) {
+    public Table(String dbName, String name) {
+        this.database = dbName;
         this.name = name;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
     }
 
     public String getName() {
@@ -33,18 +43,19 @@ public class Table {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Table table = (Table) o;
-        return Objects.equals(name, table.name) && Objects.equals(column, table.column);
+        return Objects.equals(database, table.database) && Objects.equals(name, table.name) && Objects.equals(column, table.column);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, column);
+        return Objects.hash(database, name, column);
     }
 
     @Override
     public String toString() {
         return "Table{" +
-                "name='" + name + '\'' +
+                "database='" + database + '\'' +
+                ", name='" + name + '\'' +
                 ", column=" + column +
                 '}';
     }

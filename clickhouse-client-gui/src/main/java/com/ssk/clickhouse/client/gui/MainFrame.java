@@ -1,7 +1,10 @@
 package com.ssk.clickhouse.client.gui;
 
+import com.ssk.clickhouse.db.model.Table;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class MainFrame extends JFrame {
 
@@ -10,6 +13,7 @@ public class MainFrame extends JFrame {
     private AppMenuBar menuBar;
     private AppToolBar toolBar;
     private AppLeftNavTree navTree;
+    private AppContentTabbedPane tabbedPane;
 
     MainFrame(Application app, String title) {
 
@@ -41,8 +45,12 @@ public class MainFrame extends JFrame {
         return splitPane;
     }
 
-    private JPanel buildContentPanel() {
-        JPanel contentPanel = new JPanel();
-        return contentPanel;
+    private JComponent buildContentPanel() {
+        tabbedPane = new AppContentTabbedPane();
+        return tabbedPane.buildUI();
+    }
+
+    public void displayTableData(Table tableConfig, List<List<Object>> data) {
+        tabbedPane.displayTableData(tableConfig, data);
     }
 }

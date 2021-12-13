@@ -1,10 +1,10 @@
-package com.ssk.clickhouse.client.gui;
+package com.ssk.clickhouse.client.utils;
 
 import javax.swing.*;
 
 public class AppSwingUtils {
 
-    static ImageIcon createImageIcon(int h, String path,
+    public static ImageIcon createImageIcon(int h, String path,
                                         String description) {
         java.net.URL imgURL = Thread.currentThread().getContextClassLoader().getResource(path);
         if (imgURL != null) {

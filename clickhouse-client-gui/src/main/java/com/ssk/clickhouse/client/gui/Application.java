@@ -1,10 +1,12 @@
 package com.ssk.clickhouse.client.gui;
 
-import com.ssk.clickhouse.client.model.ConnConfigPersistenceManager;
+import com.ssk.clickhouse.client.config.ConnConfigPersistenceManager;
 import com.ssk.clickhouse.com.ssk.clickhouse.dao.DbMetaDataDao;
+import com.ssk.clickhouse.com.ssk.clickhouse.dao.TableDao;
 import com.ssk.clickhouse.conn.ClickhouseDatasourceInitializer;
 import com.ssk.clickhouse.db.model.ClientConnectionConfig;
 import com.ssk.clickhouse.db.model.Database;
+import com.ssk.clickhouse.db.model.Table;
 import ru.yandex.clickhouse.ClickHouseDataSource;
 
 import javax.swing.*;
@@ -26,12 +28,20 @@ public class Application {
     }
 
     public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Application application = new Application();
                 application.createAndShowGUI();
+                for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                    if ("Nimbus".equals(info.getName())) {
+                        try {
+                            UIManager.setLookAndFeel(info.getClassName());
+                        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+                }
             }
         });
     }
@@ -40,12 +50,11 @@ public class Application {
         connectionDialog.setVisible(true);
     }
 
-    public void connect(ClientConnectionConfig clientConnectionConfig) {
+    public List<Database> connect(ClientConnectionConfig clientConnectionConfig) {
         if (!connectionMap.containsKey(clientConnectionConfig)) {
             connectionMap.put(clientConnectionConfig, ClickhouseDatasourceInitializer.createDataSource(clientConnectionConfig));
-            List<Database> databases = new DbMetaDataDao(connectionMap.get(clientConnectionConfig)).getDatabases();
-
         }
+        return new DbMetaDataDao(connectionMap.get(clientConnectionConfig)).getDatabases();
     }
 
     public void saveConnConfig(List<ClientConnectionConfig> allConnConfigs) {
@@ -58,5 +67,10 @@ public class Application {
 
     public JFrame getMainFrame() {
         return mainFrame;
+    }
+
+    public void displayTableData(ClientConnectionConfig clientConnectionConfig, Table tableConfig) {
+        List<List<Object>> data = new TableDao(connectionMap.get(clientConnectionConfig)).getTableData(tableConfig);
+        mainFrame.displayTableData(tableConfig, data);
     }
 }
