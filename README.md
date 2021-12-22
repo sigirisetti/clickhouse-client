@@ -22,3 +22,5 @@ Once added connections appear on the left navigation menu. Right click on target
 Expand database node and expand tables under database.
 
 Right click on any table node to view data. 
+
+![Table Data](/images/TableData.png)
