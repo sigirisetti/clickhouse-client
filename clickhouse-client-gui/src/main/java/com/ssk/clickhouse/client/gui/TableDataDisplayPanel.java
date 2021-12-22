@@ -4,18 +4,17 @@ import com.ssk.clickhouse.db.model.Table;
 import ru.yandex.clickhouse.ClickHouseArray;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
 public class TableDataDisplayPanel extends JPanel {
 
-    private JTable jTable;
+    private JTable table;
     private JScrollPane scrollPane;
     private JTextArea infoText;
 
@@ -33,15 +32,46 @@ public class TableDataDisplayPanel extends JPanel {
 
         scrollPane = new JScrollPane();
         add(scrollPane, BorderLayout.CENTER);
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                table.setColumnSelectionAllowed(false);
+                table.setRowSelectionAllowed(true);
+            }
+        });
     }
 
-    void displayTableData(Table table, java.util.List<List<Object>> data) {
-        jTable = new JTable(new TableDataModel(table, data));
-        resizeColumnWidth(jTable);
-        jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+    void displayTableData(Table tableConfig, java.util.List<List<Object>> data) {
+        table = new JTable(new TableDataModel(tableConfig, data));
+        resizeColumnWidth(table);
+        final JTableHeader header = table.getTableHeader();
+        header.setReorderingAllowed(false);
+        header.addMouseListener(tableHeaderMouseAdaptor(header));
+
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
         DoubleArrayRenderer doubleArrayRenderer = new DoubleArrayRenderer();
-        jTable.setDefaultRenderer(ClickHouseArray.class, doubleArrayRenderer);
-        scrollPane.setViewportView(jTable);
+        table.setDefaultRenderer(ClickHouseArray.class, doubleArrayRenderer);
+        scrollPane.setViewportView(table);
+    }
+
+    private MouseAdapter tableHeaderMouseAdaptor(JTableHeader header) {
+        return new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int col = header.columnAtPoint(e.getPoint());
+                if (header.getCursor().getType() == Cursor.E_RESIZE_CURSOR) {
+                    e.consume();
+                } else {
+                    //System.out.printf("sorting column %d%n", col);
+                    table.setColumnSelectionAllowed(true);
+                    table.setRowSelectionAllowed(false);
+                    table.clearSelection();
+                    table.setColumnSelectionInterval(col, col);
+                    //tableModel[selectedTab].sortArrayList(col);
+                }
+            }
+        };
     }
 
     public void resizeColumnWidth(JTable table) {
